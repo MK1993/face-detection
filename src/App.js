@@ -60,7 +60,7 @@ class App extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ input:this.state.input })
     };
-    fetch('https://rocky-eyrie-13507.herokuapp.com/imageurl',requestOptions)
+    fetch('https://face-app-recognition-backend.herokuapp.com/imageurl',requestOptions)
     .then(response => response.json())
     .then(response=>{
       if(response){
@@ -69,7 +69,7 @@ class App extends Component {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id:this.state.user.id })
         };
-        fetch('https://rocky-eyrie-13507.herokuapp.com/image',requestOptions)
+        fetch('https://face-app-recognition-backend.herokuapp.com/image',requestOptions)
         .then(response => response.json())
         .then(count=>{
             if(count){

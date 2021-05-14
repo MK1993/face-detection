@@ -20,7 +20,7 @@ class SignIn extends Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: this.state.emailInput,password:this.state.pswInput })
         };
-        fetch('https://rocky-eyrie-13507.herokuapp.com/signin',requestOptions)
+        fetch('https://face-app-recognition-backend.herokuapp.com/signin',requestOptions)
         .then(response =>response.json())
         .then(user => { 
             if(user.id){

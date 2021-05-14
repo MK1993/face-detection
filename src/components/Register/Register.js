@@ -24,7 +24,7 @@ class Register extends Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name:this.state.name,email:this.state.email,password:this.state.password })
         };
-        fetch('https://rocky-eyrie-13507.herokuapp.com/register',requestOptions)
+        fetch('https://face-app-recognition-backend.herokuapp.com/register',requestOptions)
         .then(response => response.json())
         .then(user=>{
             if(user.id){
