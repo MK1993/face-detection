@@ -1,28 +1,8 @@
-import React,{Component} from 'react'
-import Navigation from './components/Navigation/Navigation'
-import Logo from './components/Logo/Logo'
-import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
-import Rank from './components/Rank/Rank'
-import FaceDetect from "./components/FaceDetect/FaceDetect"
-import SignIn from './components/SignIn/SignIn'
-import Register from './components/Register/Register'
-import './App.css'
-import Particles from 'react-particles-js'
+import React,{Component,Suspense}from"react";import"./App.css";import Particles from"react-particles-js";
 
-const initialState= {
-  input: '',
-  imageUrl: '',
-  box: {},
-  route: 'signin',
-  isSignedIn: false,
-  user:{
-    id:'',
-    name:'',
-    email:'',
-    entries:0,
-    joined: ''
-  }
-};
+const Navigation=React.lazy(()=>import("./components/Navigation/Navigation")),Logo=React.lazy(()=>import("./components/Logo/Logo")),ImageLinkForm=React.lazy(()=>import("./components/ImageLinkForm/ImageLinkForm")),Rank=React.lazy(()=>import("./components/Rank/Rank")),FaceDetect=React.lazy(()=>import("./components/FaceDetect/FaceDetect")),SignIn=React.lazy(()=>import("./components/SignIn/SignIn")),Register=React.lazy(()=>import("./components/Register/Register"));
+
+const initialState={input:"",imageUrl:"",box:{},route:"signin",isSignedIn:!1,user:{id:"",name:"",email:"",entries:0,joined:""}};
 
 class App extends Component {
   constructor() {
@@ -30,10 +10,7 @@ class App extends Component {
     this.state = initialState
   }
   calculateFaceLocation = data => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById("inputimage");
-    const width = Number(image.width);
-    const height = Number(image.height);
+    const clarifaiFace=data.outputs[0].data.regions[0].region_info.bounding_box,image=document.getElementById("inputimage"),width=Number(image.width),height=Number(image.height);
     return {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
@@ -95,39 +72,7 @@ class App extends Component {
   render() {
     const {isSignedIn,route,box,imageUrl} = this.state
     return (
-      <div className="App">
-        <Particles className="particles"
-          params={{
-            "particles": {
-                "number": {
-                    "value": 150
-                },
-                "size": {
-                    "value": 3
-                }
-            },
-            "interactivity": {
-                "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "repulse"
-                    }
-                }
-            }
-        }} />
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
-        {route==='home' ? 
-        <div>
-          <Logo />
-          <Rank name={this.state.user.name} entries={this.state.user.entries} />
-          <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit} />
-          <FaceDetect box={box} imageUrl={imageUrl} />
-        </div>
-        : route==='signin' ?
-          <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-        : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-        }
-      </div>
+      <div className="App"> <Particles className="particles" params={{"particles":{"number":{"value": 150}, "size":{"value": 3}}, "interactivity":{"events":{"onhover":{"enable": true, "mode": "repulse"}}}}}/> <Suspense fallback={<div>Chargement...</div>}> <Navigation isSignedIn={isSignedIn}onRouteChange={this.onRouteChange}/>{route==='home' ? <div> <Logo/> <Rank name={this.state.user.name}entries={this.state.user.entries}/> <ImageLinkForm onInputChange={this.onInputChange}onSubmit={this.onSubmit}/> <FaceDetect box={box}imageUrl={imageUrl}/> </div>: route==='signin' ? <SignIn loadUser={this.loadUser}onRouteChange={this.onRouteChange}/> : <Register loadUser={this.loadUser}onRouteChange={this.onRouteChange}/>}</Suspense></div>
     );
   }
 }
