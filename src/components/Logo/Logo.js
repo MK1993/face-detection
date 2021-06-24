@@ -1,3 +1,4 @@
+import React from 'react'
 import Tilty from 'react-tilty'
 import brain from './brain.png'
 import './Logo.css'
