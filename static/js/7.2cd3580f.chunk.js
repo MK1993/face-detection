@@ -1,0 +1,2 @@
+(this.webpackJsonpfra=this.webpackJsonpfra||[]).push([[7],{329:function(e,t,c){"use strict";c.r(t);c(10);var s=c(7);t.default=function(e){var t=e.name,c=e.entries;return Object(s.jsxs)("div",{children:[" ",Object(s.jsx)("div",{className:"white f3",children:"".concat(t,", your current entry count is...")}),Object(s.jsx)("div",{className:"white f1",children:c})]})}}}]);
+//# sourceMappingURL=7.2cd3580f.chunk.js.map
