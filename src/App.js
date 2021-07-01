@@ -2,24 +2,26 @@ import React,{Component,Suspense}from"react";import"./App.css";import Particles 
 
 const Navigation=React.lazy(()=>import("./components/Navigation/Navigation")),Logo=React.lazy(()=>import("./components/Logo/Logo")),ImageLinkForm=React.lazy(()=>import("./components/ImageLinkForm/ImageLinkForm")),Rank=React.lazy(()=>import("./components/Rank/Rank")),FaceDetect=React.lazy(()=>import("./components/FaceDetect/FaceDetect")),SignIn=React.lazy(()=>import("./components/SignIn/SignIn")),Register=React.lazy(()=>import("./components/Register/Register"));
 
-const initialState={input:"",imageUrl:"",box:{},route:"signin",isSignedIn:!1,user:{id:"",name:"",email:"",entries:0,joined:""}};
+const initialState={input:"",imageUrl:"",boxes:[],route:"signin",isSignedIn:!1,user:{id:"",name:"",email:"",entries:0,joined:""}};
 
 class App extends Component {
   constructor() {
     super();
     this.state = initialState
   }
-  calculateFaceLocation = data => {
-    const clarifaiFace=data.outputs[0].data.regions[0].region_info.bounding_box,image=document.getElementById("inputimage"),width=Number(image.width),height=Number(image.height);
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
-    };
+  calculateFaceLocations = data => {const image = document.getElementById('inputimage');const width = Number(image.width);const height = Number(image.height);
+    return data.outputs[0].data.regions.map(face => {
+      const clarifaiFace = face.region_info.bounding_box;
+      return {
+        leftCol: clarifaiFace.left_col * width,
+        topRow: clarifaiFace.top_row * height,
+        rightCol: width - (clarifaiFace.right_col * width),
+        bottomRow: height - (clarifaiFace.bottom_row * height)
+      }
+    });
   };
-  displayFaceBox = box => {
-    this.setState({ box: box });
+  displayFaceBoxes = boxes => {
+    this.setState({ boxes: boxes });
   };
   loadUser= data => {
     this.setState({user: {
@@ -55,7 +57,7 @@ class App extends Component {
         })
         .catch(console.log)
       }
-      this.displayFaceBox(this.calculateFaceLocation(response))
+      this.displayFaceBoxes(this.calculateFaceLocations(response))
     })
     .catch(err=>console.log(err))
   };
@@ -70,9 +72,9 @@ class App extends Component {
     this.setState({route: route})
   }
   render() {
-    const {isSignedIn,route,box,imageUrl} = this.state
+    const {isSignedIn,route,boxes,imageUrl} = this.state
     return (
-      <div className="App"> <Particles className="particles" params={{"particles":{"number":{"value": 150}, "size":{"value": 3}}, "interactivity":{"events":{"onhover":{"enable": true, "mode": "repulse"}}}}}/> <Suspense fallback={<div>Chargement...</div>}> <Navigation isSignedIn={isSignedIn}onRouteChange={this.onRouteChange}/>{route==='home' ? <div> <Logo/> <Rank name={this.state.user.name}entries={this.state.user.entries}/> <ImageLinkForm onInputChange={this.onInputChange}onSubmit={this.onSubmit}/> <FaceDetect box={box}imageUrl={imageUrl}/> </div>: route==='signin' ? <SignIn loadUser={this.loadUser}onRouteChange={this.onRouteChange}/> : <Register loadUser={this.loadUser}onRouteChange={this.onRouteChange}/>}</Suspense></div>
+      <div className="App"> <Particles className="particles" params={{"particles":{"number":{"value": 150}, "size":{"value": 3}}, "interactivity":{"events":{"onhover":{"enable": true, "mode": "repulse"}}}}}/> <Suspense fallback={<div>Chargement...</div>}> <Navigation isSignedIn={isSignedIn}onRouteChange={this.onRouteChange}/>{route==='home' ? <div> <Logo/> <Rank name={this.state.user.name}entries={this.state.user.entries}/> <ImageLinkForm onInputChange={this.onInputChange}onSubmit={this.onSubmit}/> <FaceDetect boxes={boxes}imageUrl={imageUrl}/> </div>: route==='signin' ? <SignIn loadUser={this.loadUser}onRouteChange={this.onRouteChange}/> : <Register loadUser={this.loadUser}onRouteChange={this.onRouteChange}/>}</Suspense></div>
     );
   }
 }
