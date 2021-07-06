@@ -1,4 +1,4 @@
-import React from"react";import ReactDOM from"react-dom";import"./index.css";import App from"./App";import reportWebVitals from"./reportWebVitals";import"tachyons";import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import React from"react";import ReactDOM from"react-dom";import App from"./App";import reportWebVitals from"./reportWebVitals";import 'bootstrap/dist/css/bootstrap.min.css';import"tachyons";import"./index.css";import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 ReactDOM.render(
   <React.StrictMode> <App/> </React.StrictMode>,

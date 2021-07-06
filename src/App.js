@@ -2,7 +2,7 @@ import React,{Component,Suspense}from"react";import"./App.css";import Particles 
 
 const Navigation=React.lazy(()=>import("./components/Navigation/Navigation")),Logo=React.lazy(()=>import("./components/Logo/Logo")),ImageLinkForm=React.lazy(()=>import("./components/ImageLinkForm/ImageLinkForm")),Rank=React.lazy(()=>import("./components/Rank/Rank")),FaceDetect=React.lazy(()=>import("./components/FaceDetect/FaceDetect")),SignIn=React.lazy(()=>import("./components/SignIn/SignIn")),Register=React.lazy(()=>import("./components/Register/Register"));
 
-const initialState={input:"",imageUrl:"",boxes:[],route:"signin",isSignedIn:!1,user:{id:"",name:"",email:"",entries:0,joined:""}};
+const initialState={input:"",imageUrl:"",boxes:[],route:"signin",isSignedIn:false,user:{id:"",name:"",email:"",entries:0,joined:""}};
 
 class App extends Component {
   constructor() {
@@ -64,8 +64,7 @@ class App extends Component {
   onInputChange = event => this.setState({ input: event.target.value });
   onRouteChange = route => {
     if(route === 'signout'){
-      this.setState({isSignedIn: false})
-      this.setState({initialState})
+      return this.setState(initialState)
     } else if(route === 'home'){
       this.setState({isSignedIn: true})
     }

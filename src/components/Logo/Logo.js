@@ -2,7 +2,7 @@ import React from"react";import Tilty from"react-tilty";import brain from"./brai
 
 function Logo() {
     return (
-        <div className="ma4 mt0"> <Tilty className="br2 shadow-2 Tilty" max={55}style={{height: 130, width:130}}> <img style={{paddingTop: '25px'}}src={brain}alt="brain"/> </Tilty> </div>
+        <div className="ma4 mt0 mb0"> <Tilty className="br2 shadow-2 Tilty" max={55} style={{height: 100, width:100}}> <img style={{paddingTop: '10px'}} src={brain}alt="brain"/> </Tilty> </div>
     );
 }
   

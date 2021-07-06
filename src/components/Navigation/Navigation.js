@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';import ProfileIcon from '../Profile/ProfileIcon'
 
 function Navigation({onRouteChange, isSignedIn}) {
       if(isSignedIn === true){
       return (
-        <nav className="dt w-100 border-box pa3 ph5-ns"> <p className="pointer underline f4 lh-copy black fr link" onClick={()=>onRouteChange('signout')}>Sign Out</p></nav>
+        <nav className="flex justify-end dt border-box "><ProfileIcon onRouteChange={onRouteChange}/></nav>
       )
       } else {
       return (
