@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack://src/components/FaceDetect/FaceDetect.css"],"names":[],"mappings":"AAAA,cAAc,iBAAiB,CAAC,kCAAkC,CAAC,YAAY,CAAC,cAAc,CAAC,sBAAsB,CAAC,cAAc","file":"4.46548d3f.chunk.css","sourcesContent":[".bounding-box{position:absolute;box-shadow:0 0 0 3px #149df2 inset;display:flex;flex-wrap:wrap;justify-content:center;cursor:pointer}"]}
