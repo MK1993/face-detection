@@ -1,8 +1,16 @@
-import React,{Component,Suspense}from"react";import"./App.css";import Particles from"react-particles-js";
-
-const Navigation=React.lazy(()=>import("./components/Navigation/Navigation")),Logo=React.lazy(()=>import("./components/Logo/Logo")),ImageLinkForm=React.lazy(()=>import("./components/ImageLinkForm/ImageLinkForm")),Rank=React.lazy(()=>import("./components/Rank/Rank")),FaceDetect=React.lazy(()=>import("./components/FaceDetect/FaceDetect")),SignIn=React.lazy(()=>import("./components/SignIn/SignIn")),Register=React.lazy(()=>import("./components/Register/Register"));
-
-const initialState={input:"",imageUrl:"",boxes:[],route:"signin",isSignedIn:false,user:{id:"",name:"",email:"",entries:0,joined:""}};
+import React,{Component}from "react"
+import Navigation from "./components/Navigation/Navigation"
+import Logo from "./components/Logo/Logo"
+import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm"
+import Rank from "./components/Rank/Rank"
+import FaceDetect from "./components/FaceDetect/FaceDetect"
+import SignIn from "./components/SignIn/SignIn"
+import Register from "./components/Register/Register"
+import Modal from "./components/Modal/Modal"
+import Profile from "./components/Profile/Profile"
+import"./App.css"
+import Particles from "react-particles-js"
+const initialState={input:"",imageUrl:"",boxes:[],route:"signin",isProfileOpen:false,isSignedIn:false,user:{id:"",name:"",email:"",entries:0,joined:"",age:0,pet:""}};
 
 class App extends Component {
   constructor() {
@@ -70,10 +78,17 @@ class App extends Component {
     }
     this.setState({route: route})
   }
+  toggleModal = () => {
+    this.setState(state => ({
+      ...state,
+      isProfileOpen: !state.isProfileOpen,
+    }));
+  }
+
   render() {
-    const {isSignedIn,route,boxes,imageUrl} = this.state
+    const {isSignedIn,route,boxes,imageUrl,isProfileOpen,user} = this.state
     return (
-      <div className="App"> <Particles className="particles" params={{"particles":{"number":{"value": 150}, "size":{"value": 3}}, "interactivity":{"events":{"onhover":{"enable": true, "mode": "repulse"}}}}}/> <Suspense fallback={<div>Chargement...</div>}> <Navigation isSignedIn={isSignedIn}onRouteChange={this.onRouteChange}/>{route==='home' ? <div> <Logo/> <Rank name={this.state.user.name}entries={this.state.user.entries}/> <ImageLinkForm onInputChange={this.onInputChange}onSubmit={this.onSubmit}/> <FaceDetect boxes={boxes}imageUrl={imageUrl}/> </div>: route==='signin' ? <SignIn loadUser={this.loadUser}onRouteChange={this.onRouteChange}/> : <Register loadUser={this.loadUser}onRouteChange={this.onRouteChange}/>}</Suspense></div>
+      <div className="App"> <Particles className="particles" params={{"particles":{"number":{"value": 150}, "size":{"value": 3}}, "interactivity":{"events":{"onhover":{"enable": true, "mode": "repulse"}}}}}/> <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal}/> {isProfileOpen && <Modal><Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} loadUser={this.loadUser} user={user}/></Modal>}{route==='home' ? <div> <Logo/> <Rank name={this.state.user.name}entries={this.state.user.entries}/> <ImageLinkForm onInputChange={this.onInputChange}onSubmit={this.onSubmit}/> <FaceDetect boxes={boxes}imageUrl={imageUrl}/> </div>: route==='signin' ? <SignIn loadUser={this.loadUser}onRouteChange={this.onRouteChange}/> : <Register loadUser={this.loadUser}onRouteChange={this.onRouteChange}/>}</div>
     );
   }
 }

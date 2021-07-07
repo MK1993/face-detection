@@ -1,9 +1,9 @@
 import React from 'react';import ProfileIcon from '../Profile/ProfileIcon'
 
-function Navigation({onRouteChange, isSignedIn}) {
+function Navigation({onRouteChange, isSignedIn, toggleModal}) {
       if(isSignedIn === true){
       return (
-        <nav className="flex justify-end dt border-box "><ProfileIcon onRouteChange={onRouteChange}/></nav>
+        <nav className="flex justify-end dt border-box "><ProfileIcon onRouteChange={onRouteChange} toggleModal={toggleModal} /></nav>
       )
       } else {
       return (
