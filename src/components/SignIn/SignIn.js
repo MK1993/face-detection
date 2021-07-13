@@ -3,20 +3,11 @@ import React,{Component} from 'react';import"./SignIn.css";
 class SignIn extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-          emailInput:'',
-          pswInput:''
-        };
+        this.state={emailInput:"",pswInput:""};
     }
-    onEmailChange = (event) => {
-        this.setState({ emailInput: event.target.value });
-    };
-    onPasswordChange = (event) => {
-        this.setState({ pswInput: event.target.value });
-    };
-    saveAuthTokenInSessions = (token) => {
-        window.sessionStorage.setItem('token', token);
-    }
+    onEmailChange=(t=>{this.setState({emailInput:t.target.value})});
+    onPasswordChange=(t=>{this.setState({pswInput:t.target.value})});
+    saveAuthTokenInSessions=(e=>{window.sessionStorage.setItem("token",e)});
     onSubmitSignIn = ()=>{
         const requestOptions = {
             method: 'POST',

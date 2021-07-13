@@ -1,15 +1,7 @@
-import React,{Component}from "react"
-import Navigation from "./components/Navigation/Navigation"
-import Logo from "./components/Logo/Logo"
-import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm"
-import Rank from "./components/Rank/Rank"
-import FaceDetect from "./components/FaceDetect/FaceDetect"
-import SignIn from "./components/SignIn/SignIn"
-import Register from "./components/Register/Register"
-import Modal from "./components/Modal/Modal"
-import Profile from "./components/Profile/Profile"
-import"./App.css"
-import Particles from "react-particles-js"
+import React,{Suspense,Component}from"react";import"./App.css";import Particles from"react-particles-js";
+
+const Navigation=React.lazy(()=>import("./components/Navigation/Navigation")),Logo=React.lazy(()=>import("./components/Logo/Logo")),ImageLinkForm=React.lazy(()=>import("./components/ImageLinkForm/ImageLinkForm")),Rank=React.lazy(()=>import("./components/Rank/Rank")),FaceDetect=React.lazy(()=>import("./components/FaceDetect/FaceDetect")),SignIn=React.lazy(()=>import("./components/SignIn/SignIn")),Register=React.lazy(()=>import("./components/Register/Register")),Modal=React.lazy(()=>import("./components/Modal/Modal")),Profile=React.lazy(()=>import("./components/Profile/Profile"));
+
 const initialState={input:"",imageUrl:"",boxes:[],route:"signin",isProfileOpen:false,isSignedIn:false,user:{id:"",name:"",email:"",entries:0,joined:"",age:0,pet:""}};
 
 class App extends Component {
@@ -52,9 +44,7 @@ class App extends Component {
   }
   calculateFaceLocations = data => {
     if(data){
-      const image = document.getElementById('inputimage');
-      const width = Number(image.width);
-      const height = Number(image.height);
+      const image=document.getElementById("inputimage"),width=Number(image.width),height=Number(image.height);
       return data.outputs[0].data.regions.map(face => {
         const clarifaiFace = face.region_info.bounding_box;
         return {
@@ -67,49 +57,9 @@ class App extends Component {
     }
       return
   };
-  displayFaceBoxes = boxes => {
-    if(boxes){
-      this.setState({ boxes: boxes });
-    }
-  };
-  loadUser= data => {
-    this.setState({user: {
-      id:data.id,
-      name:data.name,
-      email:data.email,
-      entries:data.entries,
-      joined: data.joined
-    }})
-  }
-  onSubmit = () => {
-    this.setState({ imageUrl: this.state.input });
-    const requestOptions = {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json','Authorization': window.sessionStorage.getItem('token')},
-      body: JSON.stringify({ input:this.state.input })
-    };
-    fetch('https://face-recognition-app-backend.herokuapp.com/imageurl',requestOptions)
-    .then(response => response.json())
-    .then(response=>{
-      if(response){
-        const requestOptions = {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json','Authorization': window.sessionStorage.getItem('token') },
-          body: JSON.stringify({ id:this.state.user.id })
-        };
-        fetch('https://face-recognition-app-backend.herokuapp.com/image',requestOptions)
-        .then(response => response.json())
-        .then(count=>{
-            if(count){
-              this.setState(Object.assign(this.state.user,{entries:count}))
-            }
-        })
-        .catch(console.log)
-      }
-      this.displayFaceBoxes(this.calculateFaceLocations(response))
-    })
-    .catch(err=>console.log(err))
-  };
+  displayFaceBoxes=(e=>{e&&this.setState({boxes:e})});
+  loadUser=(e=>{this.setState({user:{id:e.id,name:e.name,email:e.email,entries:e.entries,joined:e.joined}})});
+  onSubmit=(()=>{this.setState({imageUrl:this.state.input});const t={method:"POST",headers:{"Content-Type":"application/json",Authorization:window.sessionStorage.getItem("token")},body:JSON.stringify({input:this.state.input})};fetch("https://face-recognition-app-backend.herokuapp.com/imageurl",t).then(t=>t.json()).then(t=>{if(t){const t={method:"PUT",headers:{"Content-Type":"application/json",Authorization:window.sessionStorage.getItem("token")},body:JSON.stringify({id:this.state.user.id})};fetch("https://face-recognition-app-backend.herokuapp.com/image",t).then(t=>t.json()).then(t=>{t&&this.setState(Object.assign(this.state.user,{entries:t}))}).catch(console.log)}this.displayFaceBoxes(this.calculateFaceLocations(t))}).catch(t=>console.log(t))});
   onInputChange = event => this.setState({ input: event.target.value });
   onRouteChange = route => {
     if(route === 'signout'){
@@ -119,17 +69,12 @@ class App extends Component {
     }
     this.setState({route: route})
   }
-  toggleModal = () => {
-    this.setState(state => ({
-      ...state,
-      isProfileOpen: !state.isProfileOpen,
-    }));
-  }
+  toggleModal=(()=>{this.setState(e=>({...e,isProfileOpen:!e.isProfileOpen}))});
 
   render() {
     const {isSignedIn,route,boxes,imageUrl,isProfileOpen,user} = this.state
     return (
-      <div className="App"> <Particles className="particles" params={{"particles":{"number":{"value": 150}, "size":{"value": 3}}, "interactivity":{"events":{"onhover":{"enable": true, "mode": "repulse"}}}}}/> <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal}/> {isProfileOpen && <Modal><Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} loadUser={this.loadUser} user={user}/></Modal>}{route==='home' ? <div> <Logo/> <Rank name={this.state.user.name}entries={this.state.user.entries}/> <ImageLinkForm onInputChange={this.onInputChange}onSubmit={this.onSubmit}/> <FaceDetect boxes={boxes}imageUrl={imageUrl}/> </div>: route==='signin' ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/> : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>}</div>
+      <div className="App"> <Particles className="particles" params={{"particles":{"number":{"value": 150}, "size":{"value": 3}}, "interactivity":{"events":{"onhover":{"enable": true, "mode": "repulse"}}}}}/> <Suspense fallback={<div>Chargement...</div>}> <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal}/> {isProfileOpen && <Modal><Profile isProfileOpen={isProfileOpen} toggleModal={this.toggleModal} loadUser={this.loadUser} user={user}/></Modal>}{route==='home' ? <div> <Logo/> <Rank name={this.state.user.name}entries={this.state.user.entries}/> <ImageLinkForm onInputChange={this.onInputChange}onSubmit={this.onSubmit}/> <FaceDetect boxes={boxes}imageUrl={imageUrl}/> </div>: route==='signin' ? <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/> : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>}</Suspense></div>
     );
   }
 }

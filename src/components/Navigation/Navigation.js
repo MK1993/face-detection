@@ -1,9 +1,11 @@
-import React from 'react';import ProfileIcon from '../Profile/ProfileIcon'
+import React, { Suspense } from 'react';
+const ProfileIcon = React.lazy(() => import('../Profile/ProfileIcon'));
+
 
 function Navigation({onRouteChange, isSignedIn, toggleModal}) {
       if(isSignedIn === true){
       return (
-        <nav className="flex justify-end dt border-box "><ProfileIcon onRouteChange={onRouteChange} toggleModal={toggleModal} /></nav>
+        <nav className="flex justify-end dt border-box "><Suspense fallback={<div>Chargement...</div>}><ProfileIcon onRouteChange={onRouteChange} toggleModal={toggleModal} /></Suspense></nav>
       )
       } else {
       return (

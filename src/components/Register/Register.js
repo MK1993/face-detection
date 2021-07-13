@@ -3,21 +3,11 @@ import React,{Component} from 'react';import"./Register.css";
 class Register extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-          name:'',
-          email:'',
-          password:''
-        };
+        this.state={name:"",email:"",password:""};
     }
-    onNameChange = (event) => {
-        this.setState({ name: event.target.value });
-    };
-    onEmailChange = (event) => {
-        this.setState({ email: event.target.value });
-    };
-    onPasswordChange = (event) => {
-        this.setState({ password: event.target.value });
-    };
+    onNameChange=(e=>{this.setState({name:e.target.value})});
+    onEmailChange=(a=>{this.setState({email:a.target.value})});
+    onPasswordChange=(a=>{this.setState({password:a.target.value})});
     onRegister = ()=>{
         const requestOptions = {
             method: 'POST',
