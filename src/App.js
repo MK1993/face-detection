@@ -14,7 +14,7 @@ class App extends Component {
     const token = window.sessionStorage.getItem('token');
     if (token) {
       fetch('https://face-recognition-app-backend.herokuapp.com/signin', {
-        method: 'POST',
+        method: 'post',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token
@@ -22,9 +22,9 @@ class App extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        if (data && data.id) {
+        if (data.id) {
           fetch(`https://face-recognition-app-backend.herokuapp.com/profile/${data.id}`, {
-            method: 'GET',
+            method: 'get',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': token
@@ -43,7 +43,7 @@ class App extends Component {
     }
   }
   calculateFaceLocations = data => {
-    if(data){
+    if(data && data.outputs){
       const image=document.getElementById("inputimage"),width=Number(image.width),height=Number(image.height);
       return data.outputs[0].data.regions.map(face => {
         const clarifaiFace = face.region_info.bounding_box;
@@ -59,7 +59,7 @@ class App extends Component {
   };
   displayFaceBoxes=(e=>{e&&this.setState({boxes:e})});
   loadUser=(e=>{this.setState({user:{id:e.id,name:e.name,email:e.email,entries:e.entries,joined:e.joined}})});
-  onSubmit=(()=>{this.setState({imageUrl:this.state.input});const t={method:"POST",headers:{"Content-Type":"application/json",Authorization:window.sessionStorage.getItem("token")},body:JSON.stringify({input:this.state.input})};fetch("https://face-recognition-app-backend.herokuapp.com/imageurl",t).then(t=>t.json()).then(t=>{if(t){const t={method:"PUT",headers:{"Content-Type":"application/json",Authorization:window.sessionStorage.getItem("token")},body:JSON.stringify({id:this.state.user.id})};fetch("https://face-recognition-app-backend.herokuapp.com/image",t).then(t=>t.json()).then(t=>{t&&this.setState(Object.assign(this.state.user,{entries:t}))}).catch(console.log)}this.displayFaceBoxes(this.calculateFaceLocations(t))}).catch(t=>console.log(t))});
+  onSubmit=(()=>{this.setState({imageUrl:this.state.input});const t={method:"POST",headers:{"Content-Type":"application/json",'Authorization':window.sessionStorage.getItem("token")},body:JSON.stringify({input:this.state.input})};fetch("https://face-recognition-app-backend.herokuapp.com/imageurl",t).then(t=>t.json()).then(t=>{if(t){const t={method:"PUT",headers:{"Content-Type":"application/json",'Authorization':window.sessionStorage.getItem("token")},body:JSON.stringify({id:this.state.user.id})};fetch("https://face-recognition-app-backend.herokuapp.com/image",t).then(t=>t.json()).then(t=>{t&&this.setState(Object.assign(this.state.user,{entries:t}))}).catch(console.log)}this.displayFaceBoxes(this.calculateFaceLocations(t))}).catch(t=>console.log(t))});
   onInputChange = event => this.setState({ input: event.target.value });
   onRouteChange = route => {
     if(route === 'signout'){

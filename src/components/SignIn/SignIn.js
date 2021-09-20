@@ -9,19 +9,18 @@ class SignIn extends Component {
     onPasswordChange=(t=>{this.setState({pswInput:t.target.value})});
     saveAuthTokenInSessions=(e=>{window.sessionStorage.setItem("token",e)});
     onSubmitSignIn = ()=>{
-        const requestOptions = {
-            method: 'POST',
+        fetch('https://face-recognition-app-backend.herokuapp.com/signin',{
+            method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: this.state.emailInput,password:this.state.pswInput })
-        };
-        fetch('https://face-recognition-app-backend.herokuapp.com/signin',requestOptions)
+        })
         .then(response =>response.json())
         .then(data => { 
             console.log(data)
             if(data.userId && data.success === "true"){
                 this.saveAuthTokenInSessions(data.token)
                 fetch(`https://face-recognition-app-backend.herokuapp.com/profile/${data.userId}`, {
-                    method: 'GET',
+                    method: 'get',
                     headers: {
                     'Content-Type': 'application/json',
                     'Authorization': data.token

@@ -12,6 +12,7 @@ class Profile extends Component {
       headers: {'Content-Type': 'application/json','Authorization': window.sessionStorage.getItem('token')},
       body: JSON.stringify({formInput: data})
     }).then(resp => {
+        console.log(resp)
         this.props.toggleModal();
         this.props.loadUser({ ...this.props.user, ...data });
     }).catch(console.log)
