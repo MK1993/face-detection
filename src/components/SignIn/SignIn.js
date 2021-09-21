@@ -15,8 +15,7 @@ class SignIn extends Component {
             body: JSON.stringify({ email: this.state.emailInput,password:this.state.pswInput })
         })
         .then(response =>response.json())
-        .then(data => { 
-            console.log(data)
+        .then(data => {
             if(data.userId && data.success === "true"){
                 this.saveAuthTokenInSessions(data.token)
                 fetch(`https://face-recognition-app-backend.herokuapp.com/profile/${data.userId}`, {
